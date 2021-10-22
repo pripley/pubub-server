@@ -1,8 +1,21 @@
 const User = require("./user");
-// create individual files for your models and import them here
+const Brewery = require("./brewery");
+const Beer = require("./beer");
+const Review = require("./review");
 
-// Setup Associations
+//Setup Database Associations here.
+User.hasMany(Brewery)
+Brewery.belongsTo(User)
+
+User.hasMany(Beer)
+Beer.belongsTo(User)
+
+User.hasMany(Review)
+Review.belongsTo(User)
 
 module.exports = {
   User,
+  Brewery,
+  Beer,
+  Review
 };

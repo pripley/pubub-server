@@ -14,12 +14,15 @@ const controllers = require("./controllers");
 app.use(Express.json());
 app.use(middlewares.CORS)
 app.use("/user", controllers.User);
+app.use("/brewery", controllers.Brewery);
+app.use("/beer", controllers.Beer);
+app.use("/review", controllers.Review);
 
 const resetDatabase = {force:true}
 db.authenticate()
 // add a resetDatabase inside the db.sync to drop all your tables if needed
 // example:  .then(() => db.sync(resetDatabase))
-  .then(() => db.sync())
+  .then(() => db.sync(resetDatabase))
   .then(() =>
     app.listen(process.env.PORT, () => {
       console.log(`[server]: App is listening on ${process.env.PORT}`);
