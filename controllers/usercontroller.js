@@ -65,13 +65,13 @@ router.post("/login", async function (req, res) {
         }
       });
     } else {
-      res.status(409).json({
+      res.status(404).json({
         emailMessage: "Email not registered.",
       });
     }
   } catch (e) {
     res.status(500).json({
-      mesage: "Something went wront please try again.",
+      mesage: "Something went wrong please try again.",
       error: error,
     });
   }
