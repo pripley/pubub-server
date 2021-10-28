@@ -10,8 +10,12 @@ const Brewery = db.define("brewery", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  favorite: {
-    type: DataTypes.BOOLEAN,
+  rating: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  note: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
 });

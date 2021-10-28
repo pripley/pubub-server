@@ -6,28 +6,28 @@ const Beer = db.define("beer", {
     type: DataTypes.STRING,
     allowNull: false,    
   },
-  description: {
+  location: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  abv: {
-    type: DataTypes.NUMBER,
+  rating: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
-  ibu: {
-    type: DataTypes.NUMBER,
+  servingStyle: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
-  color: {
+  flavor: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   availability: {
-    type: DataTypes.BOOLEAN,
+    type: DataTypes.STRING,
     allowNull: false,
   },
-  favorite: {
-    type: DataTypes.BOOLEAN,
+  note: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
 });

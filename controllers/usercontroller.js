@@ -8,9 +8,9 @@ const router = Router();
 
 router.post("/signup", async function (req, res) {
   try {
-    const { email, username, password } = req.body.user;
+    const { firstname, lastname, email, username, password } = req.body.user;
     // Validate user input
-    if (!(email && password && username)) {
+    if (!(firstname && lastname && email && password && username)) {
       res.status(400).send("All input is required");
     }
     // check if user already exist
@@ -21,6 +21,8 @@ router.post("/signup", async function (req, res) {
     }
     // create the new user in the table
     const newUser = await User.create({
+      firstname: firstname,
+      lastname: lastname,
       email: email,
       username: username,
       passwordhash: bcrypt.hashSync(password, 13),

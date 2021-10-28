@@ -12,7 +12,7 @@ router.post("/", validateSession, async (req, res) => {
     });
     res.status(200).json({
       message: "Review successfully saved!",
-      recipe: saveReview,
+      review: saveReview,
     });
   } catch (error) {
     res.status(500).json({
@@ -66,14 +66,14 @@ router.get("/:username", async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const review = await Review.findByOne(req.params.id);
+        const review = await Review.findOne(req.params.id);
         if (review !== null) {        
-            // return the recipe
+            // return the review
             res.status(200).json({
                 review: review,
             });
         } else {
-            // the recipe was not found
+            // the review was not found
             res.status(404).json({
                 message: 'Review not found.',
             });
@@ -86,7 +86,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // update a review
-router.put('/:id', validateSession, (req, res) => {
+router.put('/:id', validateSession, async (req, res) => {
 const { name, location, favorite } = req.body.review;
   try {
     const updateReview = await Review.update({
@@ -107,14 +107,14 @@ const { name, location, favorite } = req.body.review;
 });
 
 //delete a review
-router.delete('/:id', validateSession, (req, res) => {
+router.delete('/:id', validateSession, async (req, res) => {
     try {
         const deleteReview = await Review.destroy({
             where: { id: req.params.id, owner: req.user.username }
         })
-        res.status(200).json({ message: 'Recipe Deleted', review: deleteReview })
+        res.status(200).json({ message: 'Review Deleted', review: deleteReview })
     } catch(err) {
-        res.status(500).json({ error: err, message: 'Error: Recipe not deleted' })
+        res.status(500).json({ error: err, message: 'Error: Review not deleted' })
     }       
 });
 

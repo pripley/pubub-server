@@ -3,7 +3,7 @@ const { Beer } = require("../models");
 const validateSession = require("../middleware/validate-session");
 
 router.post("/", validateSession, async (req, res) => {
-  const { name, location, rating, servingStyle, flavor } = req.body.beer;
+  const { name, location, rating, servingStyle, flavor, availability, note } = req.body.beer;
   try {
     const saveBeer = await Beer.create({
       name: name,
@@ -11,6 +11,8 @@ router.post("/", validateSession, async (req, res) => {
       rating: rating,
       servingStyle: servingStyle,
       flavor: flavor,
+      availability: availability,
+      note: note,
       userId: req.user.id,
       owner: req.user.username,
     });
@@ -70,7 +72,7 @@ router.get("/:username", async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const beer = await Beer.findByOne(req.params.id);
+        const beer = await Beer.findOne(req.params.id);
         if (beer !== null) {        
             // return the recipe
             res.status(200).json({
@@ -90,8 +92,8 @@ router.get('/:id', async (req, res) => {
 });
 
 // update a beer
-router.put('/:id', validateSession, (req, res) => {
-    const { name, location, rating, servingStyle, flavor } = req.body.beer;
+router.put('/:id', validateSession, async (req, res) => {
+    const { name, location, rating, servingStyle, flavor, availability, note } = req.body.beer;
   try {
     const updateBeer = await Beer.update({
         name: name,
@@ -99,6 +101,8 @@ router.put('/:id', validateSession, (req, res) => {
       rating: rating,
       servingStyle: servingStyle,
       flavor: flavor,
+      availability: availability,
+      note: note,
       where: { id: req.params.id, owner: req.user.username }
     });
     res.status(200).json({
@@ -115,14 +119,14 @@ router.put('/:id', validateSession, (req, res) => {
 });
 
 //delete a beer
-router.delete('/:id', validateSession, (req, res) => {
+router.delete('/:id', validateSession, async (req, res) => {
     try {
         const deleteBeer = await Beer.destroy({
             where: { id: req.params.id, owner: req.user.username }
         })
-        res.status(200).json({ message: 'Recipe Deleted', beer: deleteBeer })
+        res.status(200).json({ message: 'Beer deleted', beer: deleteBeer })
     } catch(err) {
-        res.status(500).json({ error: err, message: 'Error: Recipe not deleted' })
+        res.status(500).json({ error: err, message: 'Error: Beer not deleted' })
     }       
 });
 

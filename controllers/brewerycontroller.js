@@ -69,7 +69,7 @@ router.get("/:username", async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const brewery = await Brewery.findByOne(req.params.id);
+        const brewery = await Brewery.findOne(req.params.id);
         if (brewery !== null) {        
             // return the recipe
             res.status(200).json({
@@ -89,7 +89,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // update a brewery
-router.put('/:id', validateSession, (req, res) => {
+router.put('/:id', validateSession, async (req, res) => {
 const { name, location, favorite } = req.body.brewery;
   try {
     const updateBrewery = await Brewery.update({
@@ -112,14 +112,14 @@ const { name, location, favorite } = req.body.brewery;
 });
 
 //delete a brewery
-router.delete('/:id', validateSession, (req, res) => {
+router.delete('/:id', validateSession, async (req, res) => {
     try {
         const deleteBrewery = await Brewery.destroy({
             where: { id: req.params.id, owner: req.user.username }
         })
-        res.status(200).json({ message: 'Recipe Deleted', brewery: deleteBrewery })
+        res.status(200).json({ message: 'Brewery deleted', brewery: deleteBrewery })
     } catch(err) {
-        res.status(500).json({ error: err, message: 'Error: Recipe not deleted' })
+        res.status(500).json({ error: err, message: 'Error: Brewery not deleted' })
     }       
 });
 
