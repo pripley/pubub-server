@@ -10,9 +10,6 @@ Brewery.belongsTo(User)
 User.hasMany(Beer)
 Beer.belongsTo(User)
 
-User.hasMany(Review)
-Review.belongsTo(User)
-
 module.exports = {
   User,
   Brewery,
