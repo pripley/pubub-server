@@ -6,18 +6,26 @@ const Brewery = db.define("brewery", {
     type: DataTypes.STRING,
     allowNull: false,    
   },
-  location: {
+  street: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
-  rating: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  note: {
+  city: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
+  state: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  zip: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }  
 });
 
 module.exports = Brewery;  
