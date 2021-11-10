@@ -18,14 +18,6 @@ const Beer = db.define("beer", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  flavor: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  availability: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   note: {
     type: DataTypes.STRING,
     allowNull: false,
