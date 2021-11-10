@@ -3,7 +3,7 @@ const Express = require("express");
 const db = require("./db");
 
 const app = Express();
-
+const cors = require("cors")
 // Import middlewares as a bundle
 const middlewares = require("./middleware");
 
@@ -12,7 +12,8 @@ const controllers = require("./controllers");
 
 // Parse the body of all requests as JSON
 app.use(Express.json());
-app.use(middlewares.CORS);
+app.use(cors())
+// app.use(middlewares.CORS);
 app.use("/user", controllers.User);
 app.use("/brewery", controllers.Brewery);
 app.use("/beer", controllers.Beer);
