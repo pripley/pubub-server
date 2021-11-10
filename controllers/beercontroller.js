@@ -3,18 +3,15 @@ const { Beer } = require("../models");
 const validateSession = require("../middleware/validate-session");
 
 router.post("/", validateSession, async (req, res) => {
-  const { name, location, rating, servingStyle, flavor, availability, note } = req.body.beer;
+  const { name, location, rating, servingStyle, note } = req.body.beer;
   try {
     const saveBeer = await Beer.create({
       name: name,
       location: location,
       rating: rating,
       servingStyle: servingStyle,
-      flavor: flavor,
-      availability: availability,
       note: note,
-      userId: req.user.id,
-      owner: req.user.username,
+      userId: req.user.id,          
     });
     res.status(200).json({
       message: "Beer successfully saved!",
@@ -93,15 +90,13 @@ router.get('/:id', async (req, res) => {
 
 // update a beer
 router.put('/:id', validateSession, async (req, res) => {
-    const { name, location, rating, servingStyle, flavor, availability, note } = req.body.beer;
+    const { name, location, rating, servingStyle, note } = req.body.beer;
   try {
     const updateBeer = await Beer.update({
-        name: name,
+      name: name,
       location: location,
       rating: rating,
       servingStyle: servingStyle,
-      flavor: flavor,
-      availability: availability,
       note: note,
       where: { id: req.params.id, owner: req.user.username }
     });
