@@ -2,30 +2,30 @@ const { Router } = require("express");
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const validateSession = require("../middleware/validate-session");
+
 
 const router = Router();
 
 router.post("/signup", async function (req, res) {
   try {
-    const { firstname, lastname, email, username, password } = req.body.user;
+    const { firstName, lastName, email, username, passwordhash } = req.body.user;
     // Validate user input
-    if (!(firstname && lastname && email && password && username)) {
+    if (!(firstName && lastName && email && passwordhash && username)) {
       res.status(400).send("All input is required");
     }
     // check if user already exist
-    const existingUser = await User.findOne({ email });
+    // const existingUser = await User.findOne({ where: {email: email} });
 
-    if (existingUser) {
-      return res.status(409).send("User Already Exist. Please Login");
-    }
+    // if (!existingUser) {
+    //   return res.status(409).send("User Already Exist. Please Login" + existingUser.length);
+    // }
     // create the new user in the table
     const newUser = await User.create({
-      firstname: firstname,
-      lastname: lastname,
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       username: username,
-      passwordhash: bcrypt.hashSync(password, 13),
+      passwordhash: bcrypt.hashSync(passwordhash, 13),
     });
     // create a token with the newUser id
     const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, {
@@ -43,15 +43,15 @@ router.post("/signup", async function (req, res) {
 
 router.post("/login", async function (req, res) {
   try {
-    const { email, password } = req.body.user;
+    const { email, passwordhash } = req.body.user;
     // Validate user input
-    if (!(email && password)) {
+    if (!(email && passwordhash)) {
       res.status(400).send("All input is required");
     }
     // Validate if user exist in our database
     const user = await User.findOne({ email });
     if (user !== null) {
-      bcrypt.compare(password, user.passwordhash, (err, matches) => {
+      bcrypt.compare(passwordhash, user.passwordhash, (err, matches) => {
         if (!err && matches) {
           let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
             expiresIn: 60 * 60 * 24,
