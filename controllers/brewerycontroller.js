@@ -3,19 +3,20 @@ const { Brewery } = require("../models");
 const validateSession = require("../middleware/validate-session");
 
 router.post("/", validateSession, async (req, res) => {
-  const { name, location, rating, note } = req.body.brewery;
+  const { name, street, city, state, zip, type } = req.body.brewery;
   try {
     const saveBrewery = await Brewery.create({
       name: name,
-      location: location,
-      rating: rating,
-      note: note,       
-      userId: req.user.id,
-      owner: req.user.username,
+      street: street,
+      city: city,
+      state: state,
+      zip: zip,
+      type: type,          
+      userId: req.user.id      
     });
     res.status(200).json({
       message: "Brewery successfully saved!",
-      recipe: saveBrewery,
+      brewery: saveBrewery,
     });
   } catch (error) {
     res.status(500).json({
@@ -47,10 +48,10 @@ router.get("/", validateSession, async (req, res) => {
 });
 
 // get all breweries for a user other than their own
-router.get("/:username", async (req, res) => {
+router.get("/owner/:username", async (req, res) => {
   try {
     const breweries = await Brewery.findAll({
-      where: { owner: req.params.username },
+      where: { ownerId: req.params.username },
     });
     if (breweries.length > 0) {
       res.status(200).json({
@@ -67,16 +68,18 @@ router.get("/:username", async (req, res) => {
 });
 
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateSession, async (req, res) => {
     try {
-        const brewery = await Brewery.findOne(req.params.id);
+        const brewery = await Brewery.findOne(
+          { where: { id: req.params.id, userId: req.user.id } }
+        );
         if (brewery !== null) {        
-            // return the recipe
+            // return the brewery
             res.status(200).json({
                 brewery: brewery,
             });
         } else {
-            // the recipe was not found
+            // the brewery was not found
             res.status(404).json({
                 message: 'Brewery not found.',
             });
@@ -90,13 +93,16 @@ router.get('/:id', async (req, res) => {
 
 // update a brewery
 router.put('/:id', validateSession, async (req, res) => {
-const { name, location, favorite } = req.body.brewery;
+const { name, street, city, state, zip, type } = req.body.brewery;
   try {
     const updateBrewery = await Brewery.update({
       name: name,
-      location: location,
-      favorite: favorite,
-      where: { id: req.params.id, owner: req.user.username }
+      street: street,
+      city: city,
+      state: state,
+      zip: zip,
+      type: type,
+      where: { id: req.params.id, userId: req.user.id }
     });
     res.status(200).json({
       message: "Brewery successfully saved!",
@@ -115,7 +121,7 @@ const { name, location, favorite } = req.body.brewery;
 router.delete('/:id', validateSession, async (req, res) => {
     try {
         const deleteBrewery = await Brewery.destroy({
-            where: { id: req.params.id, owner: req.user.username }
+            where: { id: req.params.id, userId: req.user.id }
         })
         res.status(200).json({ message: 'Brewery deleted', brewery: deleteBrewery })
     } catch(err) {
