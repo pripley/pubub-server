@@ -3,22 +3,22 @@ const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
 const router = Router();
 
 router.post("/signup", async function (req, res) {
   try {
-    const { firstName, lastName, email, username, passwordhash } = req.body.user;
+    const {
+      firstName,
+      lastName,
+      email,
+      username,
+      passwordhash,
+    } = req.body.user;
     // Validate user input
     if (!(firstName && lastName && email && passwordhash && username)) {
       res.status(400).send("All input is required");
     }
-    // check if user already exist
-    // const existingUser = await User.findOne({ where: {email: email} });
 
-    // if (!existingUser) {
-    //   return res.status(409).send("User Already Exist. Please Login" + existingUser.length);
-    // }
     // create the new user in the table
     const newUser = await User.create({
       firstName: firstName,
@@ -33,6 +33,7 @@ router.post("/signup", async function (req, res) {
     });
     // send a success message and token with the repsonse
     res.status(200).json({
+      user: user,
       message: "User sucessfully created!",
       sessionToken: token,
     });
@@ -49,7 +50,11 @@ router.post("/login", async function (req, res) {
       res.status(400).send("All input is required");
     }
     // Validate if user exist in our database
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
     if (user !== null) {
       bcrypt.compare(passwordhash, user.passwordhash, (err, matches) => {
         if (!err && matches) {
@@ -57,6 +62,7 @@ router.post("/login", async function (req, res) {
             expiresIn: 60 * 60 * 24,
           });
           res.status(200).json({
+            user: user,
             message: "User sucessfully logged in!",
             sessionToken: token,
           });
