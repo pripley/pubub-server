@@ -15,7 +15,7 @@ router.post("/", validateSession, async (req, res) => {
     });
     res.status(200).json({
       message: "Beer successfully saved!",
-      recipe: saveBeer,
+      beer: saveBeer,
     });
   } catch (error) {
     res.status(500).json({
@@ -26,7 +26,7 @@ router.post("/", validateSession, async (req, res) => {
   }
 });
 
-// get all beers for a user
+// Get all beers for a user
 router.get("/", validateSession, async (req, res) => {
   try {
     const beers = await Beer.findAll({
@@ -46,11 +46,12 @@ router.get("/", validateSession, async (req, res) => {
   }
 });
 
-// get all beers for a user other than their own
-router.get("/:username", async (req, res) => {
+// Get all beers for another user other than logged in
+router.get("/user/:id", async (req, res) => {
   try {
     const beers = await Beer.findAll({
-      where: { owner: req.params.username },
+      where: { userId: req.params.id },
+      include: "user"
     });
     if (beers.length > 0) {
       res.status(200).json({
@@ -66,17 +67,41 @@ router.get("/:username", async (req, res) => {
   }
 });
 
+// Get all beers by location
+router.get('/location/:location', async (req, res) => {
+  try {
+    const beers = await Beer.findAll({
+      where: { location: req.params.location },
+      include: "user"
+    });
+    if (beers.length > 0) {   
+          // return the beers
+          res.status(200).json({
+              beers: beers,
+          });
+      } else {
+          // the beers were not found
+          res.status(404).json({
+              message: 'Beers not found.',
+          });
+      }
+  } 
+  catch (err) {
+      res.status(500).json({ error: err, message: "Internal error" });
+    }   
+  
+});
 
 router.get('/:id', async (req, res) => {
     try {
         const beer = await Beer.findOne(req.params.id);
         if (beer !== null) {        
-            // return the recipe
+            // return the beer
             res.status(200).json({
                 beer: beer,
             });
         } else {
-            // the recipe was not found
+            // the beer was not found
             res.status(404).json({
                 message: 'Beer not found.',
             });
@@ -90,16 +115,16 @@ router.get('/:id', async (req, res) => {
 
 // update a beer
 router.put('/:id', validateSession, async (req, res) => {
-    const { name, location, rating, servingStyle, note } = req.body.beer;
+  const { name, location, rating, servingStyle, note } = req.body.beer;
   try {
     const updateBeer = await Beer.update({
       name: name,
       location: location,
       rating: rating,
       servingStyle: servingStyle,
-      note: note,
-      where: { id: req.params.id, owner: req.user.username }
-    });
+      note: note},
+      {where: { id: req.params.id, userId: req.user.id }}
+    );
     res.status(200).json({
       message: "Beer successfully saved!",
       beer: updateBeer,
@@ -117,7 +142,7 @@ router.put('/:id', validateSession, async (req, res) => {
 router.delete('/:id', validateSession, async (req, res) => {
     try {
         const deleteBeer = await Beer.destroy({
-            where: { id: req.params.id, owner: req.user.username }
+            where: { id: req.params.id, userId: req.user.id }
         })
         res.status(200).json({ message: 'Beer deleted', beer: deleteBeer })
     } catch(err) {
