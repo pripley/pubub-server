@@ -27,7 +27,7 @@ router.post("/", validateSession, async (req, res) => {
   }
 });
 
-// get all breweries for a user
+// Get all breweries for a user
 router.get("/", validateSession, async (req, res) => {
   try {
     const breweries = await Brewery.findAll({
@@ -47,11 +47,11 @@ router.get("/", validateSession, async (req, res) => {
   }
 });
 
-// get all breweries for a user other than their own
-router.get("/owner/:username", async (req, res) => {
+// Get all breweries for another user other than logged in user
+router.get("/user/:username", async (req, res) => {
   try {
     const breweries = await Brewery.findAll({
-      where: { ownerId: req.params.username },
+      where: { userId: req.params.username },
     });
     if (breweries.length > 0) {
       res.status(200).json({
@@ -67,7 +67,7 @@ router.get("/owner/:username", async (req, res) => {
   }
 });
 
-
+// Get a brewery by ID
 router.get('/:id', validateSession, async (req, res) => {
     try {
         const brewery = await Brewery.findOne(
@@ -91,7 +91,8 @@ router.get('/:id', validateSession, async (req, res) => {
     
 });
 
-// update a brewery
+
+// Update a brewery
 router.put('/:id', validateSession, async (req, res) => {
 const { name, street, city, state, zip, type } = req.body.brewery;
   try {
@@ -117,7 +118,7 @@ const { name, street, city, state, zip, type } = req.body.brewery;
   }
 });
 
-//delete a brewery
+// Delete a brewery
 router.delete('/:id', validateSession, async (req, res) => {
     try {
         const deleteBrewery = await Brewery.destroy({
