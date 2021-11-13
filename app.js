@@ -17,7 +17,6 @@ app.use(cors())
 app.use("/user", controllers.User);
 app.use("/brewery", controllers.Brewery);
 app.use("/beer", controllers.Beer);
-app.use("/review", controllers.Review);
 
 const resetDatabase = { force: true };
 db.authenticate()
