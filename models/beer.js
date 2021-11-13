@@ -1,29 +1,27 @@
 const { DataTypes } = require("sequelize");
 const db = require("../db");
 // Example UserTable Build this out Need more columns add it here
-const User = db.define("user", {
-  firstName: {
+const Beer = db.define("beer", {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,    
+  },
+  location: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  lastName: {
+  rating: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  servingStyle: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  passwordhash: {
+  note: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-module.exports = User;
+module.exports = Beer;
