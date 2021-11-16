@@ -92,6 +92,7 @@ router.get('/location/:location', async (req, res) => {
   
 });
 
+// Get a beers by id
 router.get('/:id', async (req, res) => {
     try {
         const beer = await Beer.findOne(req.params.id);
@@ -113,7 +114,7 @@ router.get('/:id', async (req, res) => {
     
 });
 
-// update a beer
+// Update a beer
 router.put('/:id', validateSession, async (req, res) => {
   const { name, location, rating, servingStyle, note } = req.body.beer;
   try {
@@ -138,7 +139,7 @@ router.put('/:id', validateSession, async (req, res) => {
   }
 });
 
-//delete a beer
+//Delete a beer
 router.delete('/:id', validateSession, async (req, res) => {
     try {
         const deleteBeer = await Beer.destroy({
