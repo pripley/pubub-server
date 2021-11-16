@@ -21,11 +21,16 @@ const Brewery = db.define("brewery", {
   zip: {
     type: DataTypes.STRING,
     allowNull: true,
-  },
+  },    
   type: {
     type: DataTypes.STRING,
     allowNull: true,
-  }  
+  },
+  favorite: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+    defaultValue: false,
+  }   
 });
 
 module.exports = Brewery;  
